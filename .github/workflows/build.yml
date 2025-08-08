@@ -2,7 +2,8 @@ name: Build ESP32 Sketch
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
 
 jobs:
   build:
@@ -13,9 +14,7 @@ jobs:
       uses: actions/checkout@v3
 
     - name: Set up Arduino CLI
-      uses: arduino/setup-arduino-cli@v1
-      with:
-        version: latest
+      uses: arduino/setup-arduino-cli@v1.1.2  # ✅ sửa lỗi ở đây
 
     - name: Install ESP32 core
       run: |
@@ -23,11 +22,10 @@ jobs:
         arduino-cli core install esp32:esp32
 
     - name: Compile sketch
-      run: |
-        arduino-cli compile --fqbn esp32:esp32:esp32doit-devkit-v1 src
+      run: arduino-cli compile --fqbn esp32:esp32:esp32 src/
 
     - name: Upload compiled binary
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v3
       with:
-        name: ESP32-Binary
-        path: src/build/esp32*/src.ino.bin
+        name: firmware
+        path: src/build/*.bin
